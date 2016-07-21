@@ -12,7 +12,7 @@
     #matrix {
         width: 80%;
         margin: 0 auto;
-        border: 2px groove green;
+        /*border: 2px groove green;*/
     }
     .control-button {
     	padding: 5px;
@@ -25,6 +25,21 @@
     }
     .message-step {
     	font-style: oblique;
+    }
+    .matrix-elem {
+    	height: 50px;
+    	border: 2px solid yellowgreen;
+    	padding: 10px;
+    	margin: 5px;
+    	display: inline-block;
+    	border-radius: 10px;
+    	animation: matrix_elem_animate 2s infinite ;
+    	box-shadow: 10px 10px 25px red;
+    }
+    @keyframes matrix_elem_animate {
+    	50% {
+    		box-shadow: 10px 10px 25px blue;
+    	}
     }
     </style>
 </head>

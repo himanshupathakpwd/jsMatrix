@@ -26,7 +26,8 @@
             control_button: $('<div class="control-button">'),
             input_text: $('<input type="text" class="input-button">'),
             input_number: $('<input type="number" class="input-button">'),
-            input_submit: $('<input type="submit" value="submit">')
+            input_submit: $('<input type="submit" value="submit">'),
+            elem_matrix: $('<div class="matrix-elem">')
         };
         matrixAPP.getVariable = function(varName) {
             return this.variables[varName];
@@ -77,14 +78,19 @@
         }.call();
         matrixAPP.startProgram = function() {
             var interaction_stages = matrixAPP.getVariable('interaction_stages');
-            interaction_stages.forEach(function(value, key, array) {
-                console.log(value);
-            });
+            // interaction_stages.forEach(function(value, key, array) {
+            //     console.log(value);
+            // });
             matrixAPP.gotoStage(interaction_stages[0]);
         };
         matrixAPP.gotoStage = function(currentStage) {
             matrixAPP.setVariable('currentStage', currentStage);
             console.log('In Stage: ' + currentStage);
+            switch (currentStage) {
+                case 'fill_matrix':
+                    matrixAPP.generateMatrix();
+                    break;
+            }
             matrixAPP.askQuestion('message_' + currentStage);
             matrixAPP.takeInput(currentStage);
         };
@@ -96,7 +102,6 @@
             $('.message-step').html(help);
         };
         matrixAPP.takeInput = function(currentStage) {
-            var input_number = matrixAPP.getVariable('input_number');
             $('.take-input > form')
                 .off('submit').on('submit', function(event) {
                     event.preventDefault();
@@ -109,6 +114,7 @@
                         throw new Error('You are not calling a valid stage.');
                     }
                 });
+            var input_number = matrixAPP.getVariable('input_number');
             input_number.clone().attr({
                     'required': 'required',
                     'name': 'input_number'
@@ -124,5 +130,28 @@
         matrixAPP.getInput = function(inputKey) {
             return this.inputs[inputKey];
         };
+        matrixAPP.generateMatrix = function() {
+            console.log('generate matrix');
+            var rows = matrixAPP.getInput('enter_rows')[0].value;
+            console.log(rows);
+            var cols = matrixAPP.getInput('enter_cols')[0].value;
+            elem_matrix = matrixAPP.getVariable('elem_matrix');
+            matrix_elem_counter = [];
+            for (var row = 1; row <= rows; row++) {
+                for (var col = 1; col <= cols; col++) {
+                	matrix_elem_counter.push('matrix_elem_' + row + '_' + col);
+                    elem_matrix.clone().addClass('matrix-elem').attr({
+                        'data-matrix-elem-number': 'matrix-elem-' + row + '_' + col
+                    }).appendTo('#matrix');
+                }
+            }
+            console.log(matrix_elem_counter);
+            var currentStage = matrixAPP.getVariable('currentStage');
+            var interaction_stages = matrixAPP.getVariable('interaction_stages');
+            currentStageIndex = interaction_stages.indexOf(currentStage);
+            interaction_stages.splice(currentStageIndex, 0, matrix_elem_counter.join());
+            console.log(interaction_stages);
+            $('.matrix-elem').width((60 / cols) + '%');
+        }
     });
 })(jQuery);
