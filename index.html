@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Matrix Programs</title>
+    <style>
+    #main {
+        margin: 0 auto;
+        text-align: center;
+    }
+    
+    #matrix {
+        width: 80%;
+        margin: 0 auto;
+        border: 2px groove green;
+    }
+    .control-button {
+    	padding: 5px;
+    	border: 2px solid;
+    	display: inline-block;
+    	margin: 5px;
+    }
+    .control-button.active {
+    	border-color: green;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <div id="user-interaction">
+            <div class="message"></div>
+            <div class="message-step"></div>
+        </div>
+        <div id="control-buttons"></div>
+        <div id="matrix"></div>
+    </div>
+    <script src="./includes/js/jquery-1.9.1.min.js"></script>
+    <script src="./includes/js/script.js"></script>
+</body>
+
+</html>
