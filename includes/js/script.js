@@ -27,7 +27,8 @@
             input_text: $('<input type="text" class="input-button">'),
             input_number: $('<input type="number" class="input-button">'),
             input_submit: $('<input type="submit" value="submit">'),
-            elem_matrix: $('<div class="matrix-elem">')
+            elem_matrix_row: $('<div class="matrix-row">').css({ 'display': 'table-row' }),
+            elem_matrix: $('<div class="matrix-elem">').css({ 'display': 'table-cell' })
         };
         matrixAPP.getVariable = function(varName) {
             return this.variables[varName];
@@ -135,15 +136,21 @@
             var rows = matrixAPP.getInput('enter_rows')[0].value;
             console.log(rows);
             var cols = matrixAPP.getInput('enter_cols')[0].value;
-            elem_matrix = matrixAPP.getVariable('elem_matrix');
-            matrix_elem_counter = [];
+            var elem_matrix = matrixAPP.getVariable('elem_matrix');
+            var elem_matrix_row = matrixAPP.getVariable('elem_matrix_row');
+            var matrix_elem_counter = [];
             for (var row = 1; row <= rows; row++) {
+                var current_matrix_row = elem_matrix_row.clone().attr({
+                	'data-matrix-row-number': 'matrix-row-' + row
+                });
                 for (var col = 1; col <= cols; col++) {
-                	matrix_elem_counter.push('matrix_elem_' + row + '_' + col);
+                    matrix_elem_counter.push('matrix_elem_' + row + '_' + col);
                     elem_matrix.clone().addClass('matrix-elem').attr({
                         'data-matrix-elem-number': 'matrix-elem-' + row + '_' + col
-                    }).appendTo('#matrix');
+                    }).appendTo(current_matrix_row);
                 }
+                current_matrix_row.appendTo('#matrix');
+                current_matrix_row = null;
             }
             console.log(matrix_elem_counter);
             var currentStage = matrixAPP.getVariable('currentStage');
@@ -151,7 +158,6 @@
             currentStageIndex = interaction_stages.indexOf(currentStage);
             interaction_stages.splice(currentStageIndex, 0, matrix_elem_counter.join());
             console.log(interaction_stages);
-            $('.matrix-elem').width((60 / cols) + '%');
         }
     });
 })(jQuery);
