@@ -8,6 +8,7 @@
             message_enter_rows: 'Enter the number of rows in matrix',
             message_enter_cols: 'Enter the number of columns in matrix',
             message_fill_matrix: 'Start filling numbers in the matrix',
+            message_stage_fill_matrix: 'Fill number for matrix element: @row_@col',
             message_error_fill_matrix: 'Kindly fill numbers in the whole matrix',
             text_start_button: 'Start Program',
             calculation_modes: [{
@@ -98,8 +99,8 @@
         matrixAPP.askQuestion = function(question, help) {
             question = question || '';
             help = help || '';
-            var question = matrixAPP.getVariable(question);
-            $('.message').html(question);
+            var message_question = matrixAPP.getVariable(question);
+            $('.message').html(message_question);
             $('.message-step').html(help);
         };
         matrixAPP.takeInput = function(currentStage) {
@@ -134,10 +135,10 @@
         matrixAPP.generateMatrix = function() {
             console.log('generate matrix');
             var rows = matrixAPP.getInput('enter_rows')[0].value;
-            console.log(rows);
             var cols = matrixAPP.getInput('enter_cols')[0].value;
             var elem_matrix = matrixAPP.getVariable('elem_matrix');
             var elem_matrix_row = matrixAPP.getVariable('elem_matrix_row');
+            var message_stage_fill_matrix = matrixAPP.getVariable('message_stage_fill_matrix');
             var matrix_elem_counter = [];
             for (var row = 1; row <= rows; row++) {
                 var current_matrix_row = elem_matrix_row.clone().attr({
@@ -148,16 +149,19 @@
                     elem_matrix.clone().addClass('matrix-elem').attr({
                         'data-matrix-elem-number': 'matrix-elem-' + row + '_' + col
                     }).appendTo(current_matrix_row);
+                    var currentElemMessage = message_stage_fill_matrix.replace(/@row/, row).replace(/@col/, col);
+                    // console.log(currentElemMessage);
+                    matrixAPP.setVariable('message_' + 'matrix_elem_' + row + '_' + col, currentElemMessage);
                 }
                 current_matrix_row.appendTo('#matrix');
-                current_matrix_row = null;
             }
-            console.log(matrix_elem_counter);
             var currentStage = matrixAPP.getVariable('currentStage');
             var interaction_stages = matrixAPP.getVariable('interaction_stages');
-            currentStageIndex = interaction_stages.indexOf(currentStage);
-            interaction_stages.splice(currentStageIndex, 0, matrix_elem_counter.join());
-            console.log(interaction_stages);
+            var currentStageIndex = interaction_stages.indexOf(currentStage);
+            // console.log(currentStageIndex);
+            interaction_stages.splice.apply(interaction_stages, [currentStageIndex + 1, 0].concat(matrix_elem_counter));
+            // console.log(interaction_stages);
+            matrixAPP.gotoStage(interaction_stages[currentStageIndex + 1]);
         }
     });
 })(jQuery);
